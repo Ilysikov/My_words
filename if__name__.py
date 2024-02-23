@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 import sys
 from Ui_MainWindow import Ui_MainWindow
 from logika import W_search
+# Begin
 
 if __name__ == "__main__":
     data=W_search()
