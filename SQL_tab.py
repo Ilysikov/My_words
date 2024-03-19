@@ -2,8 +2,10 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from PyQt5.QtSql import QSqlDatabase
 
 class my_tabs(object):
-    def connect(self)->None:
+
+    def connect_(self)->None:
         self.con = QSqlDatabase.addDatabase("QSQLITE")
+        self.cursor_tran(con=self.con)
     def create_file_data(self,
                          name: str="/Users/ivanlysikov/PycharmProjects/pythonProject6/.venv/var/personal_dictionary.db")->None:
         self.con.setDatabaseName(name)
@@ -39,11 +41,27 @@ class my_tabs(object):
         for i in list_:
             self.cursor.addBindValue(i)
         self.cursor.exec()      
-    def delete_(self, delete_data: str)->None:
-        self.cursor.exec(f'DELETE FROM {delete_data}')
+    def delete_tab(self, name_tab: str)->None:
+        self.cursor.exec(f'DELETE FROM {name_tab}')
+    def delete_data(self, name_tab: str, delete_data:str)->None:
+        self.cursor.exec(f'DELETE FROM {name_tab} WHERE {delete_data}')
+        if name_tab=='progress_':
+            self.cursor.exec(f'DELETE FROM {name_tab} WHERE "answer"=" "')
+        else:
+            self.cursor.exec(f'DELETE FROM {name_tab} WHERE "english"=" "')
+
+
+    @property
     def fetchone_(self)-> int:
-        while (self.cursor.next()):
-            self.count=self.cursor.value(0)
-        return self.count
-    def cursor_close(self):
-        self.cursor.close()
+        count=1
+        while (self.cursor.next()) and self.cursor.value(0):
+            count=self.cursor.value(0)
+        return count
+
+    @classmethod
+    def cursor_tran(cls, con:object):
+        cls.con=con
+    @classmethod
+    def cursor_close(cls):
+        cls.con.commit()
+        cls.con.close()
