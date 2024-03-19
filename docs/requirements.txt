@@ -1,1 +1,4 @@
-PyQt5
+brainome-linux-python3.7
+pip==23.2.1
+PyQt5==5.15.10
+
