@@ -6,23 +6,35 @@ from SQL_tab import my_tabs
 from class_Text import Text
 
 
-# передает пользовательский ввод для последующей обработки классу Trans_ter
+"""
+передает пользовательский ввод для последующей обработки классу Trans_ter
+"""
 class Input_new_word:
     def __init__(self, name: str, class_obj: object) -> None:
-        # name - ключ словаря для последующей записи значения
+        """
+        name - ключ словаря для последующей записи значения
+        """
         self.name_object_ = name
-        # экземпляр класса Trans_ter хранящий соответствующий словарь 
+        """ 
+        экземпляр класса Trans_ter хранящий соответствующий словарь 
+        """
         self.n_ap = class_obj
 
     def new_w(self, txt: str) -> None:
-        # txt - введеный пользователем текст
+        """
+        txt - введеный пользователем текст
+        """
         self.w = txt
-        # сохранение текста в виде значения ранее созданного словаря
+        """
+        сохранение текста в виде значения ранее созданного словаря 
+        """
         self.n_ap.new_w_ap(w_ap=self.w, name=self.name_object_)
         return self.w, self.name_object_
 
 
-# передает пользовательский ввод для последующей обработки классу Tran_tren(Trans_ter)
+""" 
+передает пользовательский ввод для последующей обработки классу Tran_tren(Trans_ter)
+"""
 class Input_trenirovka(Input_new_word):
     def new_w(self, txt: str) -> None:
         self.w = txt
@@ -30,11 +42,15 @@ class Input_trenirovka(Input_new_word):
         return self.w
 
 
-# дочерний класс для обработки ввода пользователем транскрипции слова
+"""
+дочерний класс для обработки ввода пользователем транскрипции слова
+"""
 class Transcrition(Input_new_word):
 
     def new_w(self, txt: str) -> None:
-        # проверяет введена ли транскрипция со скобками
+        """
+        проверяет введена ли транскрипция со скобками
+        """
         if len(txt.strip()) > 2 and txt[0] == '[':
             self.tran = txt
         elif txt.strip():
@@ -44,10 +60,12 @@ class Transcrition(Input_new_word):
         self.n_ap.new_w_ap(w_ap=self.tran, name=self.name_object_)
         return self.tran
 
+"""
+при создании экземпляра создает словарь с пустыми значениями
+пользовательский ввод добавляется, как значение в словарь
+данный класс содержит методы запускающие поиск по словарю и отображение слова
+"""
 
-# при создании экземпляра создает словарь с пустыми значениями
-# пользовательский ввод добавляется, как значение в словарь
-# данный класс содержит методы запускающие поиск по словарю и отображение слова
 class Trans_ter:
     def __init__(self, dict_word: dict = {'self.e': '', "self.r": '',
                                           "self.t": '', "self.tran": ''}) -> None:
@@ -68,15 +86,18 @@ class Trans_ter:
         self.trenirovka.play()
 
 
-# дочерний класс обрабатывает пользовательский ввод в процессе тренировки
+""" 
+дочерний класс обрабатывает пользовательский ввод в процессе тренировки
+"""
 class Tran_tren(Trans_ter):
     def chek_create(self) -> None:
         go = Chek(dict_word=self.dict_word, trenirovka=self.trenirovka)
         go.check_word()
 
-
-# содержит множество класс-методов необходимые для возврата новых значений,
-# которые присваиваются виджетам
+""" 
+содержит множество класс-методов необходимые для возврата новых значений,
+которые присваиваются виджетам
+"""
 class slc:
     @classmethod
     def po(cls, pole_1: object, pole_2: object, pole_3: object,
@@ -187,9 +208,13 @@ class slc:
         return cls.number
 
 
-# класс отвечающий за поиск слова в таблице "word_"
+"""
+класс отвечающий за поиск слова в таблице "word_"
+"""
 class W_search:
-    # запускается только из основного кода, создает базу данных
+    """
+    запускается только из основного кода, создает базу данных
+    """
     def create_sql(self):
         self.data=my_tabs()
         self.data.connect_()
@@ -211,7 +236,9 @@ class W_search:
         self.data = my_tabs()
         self.data.open_data()
         self.data.cursor_()
-    # возвращает количество слов
+    """
+    возвращает количество слов
+    """
     def count_tab(self, pole='english', tab='words_') -> int:
         if tab=='progress_':
             pole='answer'
@@ -221,28 +248,35 @@ class W_search:
         self.count_table = v.fetchone_
         return self.count_table
 
-    # возвращает объект в котором сохранены данные из таблицы
+    """
+    возвращает объект в котором сохранены данные из таблицы
+    """
     def my_select(self) -> object:
         self.s_object = my_tabs()
         self.s_object.cursor_()
         self.s_object.select_(search_="english, russian, translit, transkrip",
                   tab_="words_")
         return self.s_object
-
-    # возвращает список слов сохраненных в определенной строке и определенном столбце
+    """
+    возвращает список слов сохраненных в определенной строке и определенном столбце
+    """
     def my_list(self, my_object: object, column: str) -> list:
         list_ = my_object.value_column(column).lower().split(',')
         list2 = [w.strip() for w in list_]
         return list2
 
-    # поиск слова в таблице
+    """
+    поиск слова в таблице
+    """
     def search_(self, dict_word: dict) -> None:
         self.dict_word = dict_word
         self.text_ = Text()
         n_wor = New_word()
         w = self.my_select()
         if self.count_table > 0:
-            # проверка отсутствия слова в каждой строке
+            """
+            проверка отсутствия слова в каждой строке
+            """
             for index in range(self.count_table):
                 w.seek_(index)
                 if w.value_column('english') == self.dict_word['self.e']:
@@ -270,7 +304,9 @@ class W_search:
             n_wor.app_word(self.dict_word)
             n_wor.new_word_()
             n_wor.new_word_continue()
-# добавление нового слова
+    """ 
+    добавление нового слова 
+    """
     @classmethod
     def close_tran(cls, data):
         cls.data=data
@@ -283,11 +319,15 @@ class W_search:
         v.delete_data(name_tab=dict_delete['name_tab'], delete_data=dict_delete['delete_data'])
         return self.count_tab(tab=dict_delete['name_tab'])
 class New_word:
-    # принимает и возвращает в виде списка значения словаря
+    """
+    принимает и возвращает в виде списка значения словаря
+    """
     def app_word(self, dict_word: dict) -> list:
         self.list_word = [dict_word[i] for i in dict_word.keys()]
         return self.list_word
-    # добавление нового слова
+    """ 
+    добавление нового слова 
+    """
     def new_word_(self) -> None:
         h = my_tabs()
         h.cursor_()
@@ -300,14 +340,21 @@ class New_word:
 
         return ask
     def new_word_continue(self):
-        slc.sel()  # изменение таблица во вкладке "Редактирование"
+        slc.sel()
+        """ 
+        изменение таблица во вкладке "Редактирование" 
+        """
         self.text_ = Text()
         count = W_search.count_tab(self)
         list_cancel = slc.ret1__()
-        # очистка полей ввода
+        """ 
+        очистка полей ввода 
+        """
         nw_can = Canc(list_cancel)
         nw_can.cancel_()
-        # изменение текста
+        """
+        изменение текста 
+        """
         slc.lab(str_01=self.text_.i_text(key_='nt_1_03',
                                          list_dic={'english': self.list_word[0],
                                                    'russian': self.list_word[1]}),
@@ -315,27 +362,35 @@ class New_word:
                                                     str_05=self.text_.i_text(key_='t_05',
                                                     list_dic={'self.count_table': count}))
 
-# отображение рандомным образом слов словаря, их сохранения и передача для последующей обработки
+""" 
+отображение рандомным образом слов словаря, их сохранения и передача для последующей обработки 
+"""
 class See_word(W_search):
     # значения - переводимый язык
     def tran_column(self) -> None:
         self.column = slc.column_ret()
         self.column_chek = slc.column_chek_ret()
         return self.column
-
-    # переопределение родительского метода
-    # добавляем поиск и сохранение в экземпляр строки, найденной по номеру
+    """
+    переопределение родительского метода
+    добавляем поиск и сохранение в экземпляр строки, найденной по номеру
+    """
     def my_select2(self, number: int) -> object:
         super().my_select().seek_(number)
         return self.s_object
-    # процесс тренировки
+    """
+    процесс тренировки
+    """
     def play(self) -> None:
         self.text = Text()
         # необходима при перезапуске
         slc.play_tran(str_skip=self.text.c_text(key_='t_skip_2'),
                       str_T_input=self.text.c_text(key_='input'))
         if self.count_table > 0:
-            # по рандомну избранному номеру строки возвращается слово на языке, который задал пользователь
+            """
+            по рандомну избранному номеру строки возвращается слово на языке, 
+            который задал пользователь
+            """
             self.number = random.randint(0, self.count_table - 1)
             slc.number_(self.number)
             s = self.my_select2(number=self.number)
@@ -351,7 +406,9 @@ class See_word(W_search):
             slc.t_word(str_T_word=self.text.c_text(key_='T_word_0'))
 
 
-# проверка пользовательского ввода при тренировке
+"""
+проверка пользовательского ввода при тренировке
+"""
 class Chek(See_word):
     def __init__(self, dict_word: dict, trenirovka: object) -> None:
         super().__init__()
@@ -391,9 +448,13 @@ class Chek(See_word):
             slc.label_t_01(t_01=self.text.c_text(key_='t_1_4'))
         return answer
 
-# класс отвечающий за поиск и отображение транскрипции или/транслитерации слова
+"""
+класс отвечающий за поиск и отображение транскрипции или/транслитерации слова
+"""
 class Fonetika:
-    # поиск и сохранение в переменные транскрипции и транслитерации соответствующего слова
+    """
+    поиск и сохранение в переменные транскрипции и транслитерации соответствующего слова
+    """
     def trans_eng(self, number: int, english_trans: str) -> None:
         t = my_tabs()
         self.text = Text()
@@ -402,7 +463,9 @@ class Fonetika:
         t.seek_(number)
         self.translit = t.value_column('translit')
         self.transkrip = t.value_column('transkrip')
-        # присвоение новых значений и вызов соответствующего класс-метод scl
+        """
+        присвоение новых значений и вызов соответствующего класс-метод scl
+        """
         if not self.translit.strip() and not self.transkrip.strip():
             str_04 = self.text.c_text(key_='t_04')
         elif not self.translit.strip() and self.transkrip.strip():
@@ -412,15 +475,17 @@ class Fonetika:
             str_04 = self.text.i_text(key_='t_04_3', list_dic={'english_trans': english_trans,
                                                                'self.translit': self.translit})
         elif self.translit.strip() and self.transkrip.strip():
-            str_04=self.text.i_text(key_='t_04_4',list_dic={'english_trans':english_trans,
+            str_04=self.text.i_text(key_='t_04_4', list_dic={'english_trans':english_trans,
                                                             'self.transkrip':self.transkrip,
-                                                            'self.translit':self.translit})
+                                                             "self.translit":self.translit})
         slc.tran_04(str_04)
         return True
 
 
 class Search_prog:
-    # поиск слова в таблице "progress_"
+    """
+    поиск слова в таблице "progress_"
+    """
     def search_(self, answer: str, question: str, percent: float) -> List[Union[str, float]]:
         self.answer_0 = answer
         self.question = question
@@ -453,7 +518,9 @@ class Search_prog:
             self.progress_()
 
 
-    # добавление слова в случае его отсутствия
+    """
+    добавление слова в случае его отсутствия
+    """
     def add_two_table(self) -> int:
         q = my_tabs()
         q.cursor_()
@@ -462,7 +529,9 @@ class Search_prog:
         q.select_(search_="COUNT(answer)", tab_="progress_")
         count_two_tab=q.fetchone_
         return count_two_tab
-        # перасчет суммы значений таблицы определяющая уровень прогресса
+    """
+    перасчет суммы значений таблицы определяющая уровень прогресса
+    """
 
     def progress_(self) -> None:
         v = my_tabs()
@@ -500,8 +569,10 @@ class Search_prog:
             slc.label_t_03(t_03=str(round(self.sum_percent, 2)) + "% " + self.level, prog_int=self.sum_percent)
 
 class Chang(object):
-    # переопределение значений в списке, 
-    # которые соответствуют переменным в классе Ui_MainWindow
+    """
+    переопределение значений в списке,
+    которые соответствуют переменным в классе Ui_MainWindow
+    """
     def colu_n(self, list: list) -> list:
         self.text_ = Text()
         list[3].setText(self.text_.c_text(key_="t_skip"))
@@ -527,7 +598,10 @@ class Chang(object):
         return [list[0], list[7], list[9], list[10]]
 
 
-# перемещение курсора
+
+"""
+перемещение курсора
+"""
 class Focus_tran:
     def __init__(self, pole: object) -> None:
         self.pole = pole
@@ -535,8 +609,9 @@ class Focus_tran:
     def foc_(self) -> None:
         self.pole.setFocus()
 
-
-# очистка полей ввода
+"""
+очистка полей ввода
+"""
 class Canc:
     def __init__(self, list_: list) -> None:
         self.list_ = list_
