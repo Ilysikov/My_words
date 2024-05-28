@@ -59,7 +59,7 @@ pip install -r docs/requirements.txt
 *Редактирование
 
 Начальный режим "Редактирование":
-![](docs2/static/Снимок экрана 2024-05-28 в 19.56.52.png)
+![](https://github.com/Ilysikov/docs2/static/Снимок экрана 2024-05-28 в 19.56.52.png)
 
 
 
