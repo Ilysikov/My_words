@@ -59,7 +59,7 @@ pip install -r docs/requirements.txt
 *Редактирование
 
 Начальный режим "Редактирование":
-![]( https://github.com/Ilysikov/My_words/raw/master/docs/static/redact.png)
+![](docs/static/redact.png)
 
 
 
