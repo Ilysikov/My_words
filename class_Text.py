@@ -66,3 +66,5 @@ class Text(object):
         self.columnask=col
     def ask_(self)->None:
         self.label_T_str_00.setText('Уже '+self.columnask)
+
+
